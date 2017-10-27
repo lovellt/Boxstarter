@@ -10,7 +10,7 @@
 # Run this boxstarter by calling the following from an **elevated** command-prompt:
 # 	start http://boxstarter.org/package/nr/url?<URL-TO-RAW-GIST>
 # OR
-# 	Install-BoxstarterPackage -PackageName <URL-TO-RAW-GIST> -DisableReboots
+# 	Install-BoxstarterPackage -PackageName https://raw.githubusercontent.com/lovellt/Boxstarter/master/boxstartconf.txt -DisableReboots
 #
 # Learn more: http://boxstarter.org/Learn/WebLauncher
 
@@ -18,7 +18,7 @@
 Disable-UAC
 
 #--- Fonts ---
-choco install inconsolata -y
+# choco install inconsolata -y
   
 #--- Windows Settings ---
 Disable-BingSearch
@@ -215,7 +215,7 @@ Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer 
 # Disable the Lock Screen (the one before password prompt - to prevent dropping the first character)
 #If (-Not (Test-Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization)) {
 #	New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows -Name Personalization | Out-Null
-}
+#}
 Set-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization -Name NoLockScreen -Type DWord -Value 1
 # To Restore:
 # Set-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization -Name NoLockScreen -Type DWord -Value 1
@@ -228,7 +228,7 @@ Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\P
 # Use the Windows 7-8.1 Style Volume Mixer
 #If (-Not (Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC")) {
 #	New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name MTCUVC | Out-Null
-}
+#}
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name EnableMtcUvc -Type DWord -Value 0
 # To Restore (Windows 10 Style Volume Control):
 # Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name EnableMtcUvc -Type DWord -Value 1
