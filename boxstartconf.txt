@@ -1,51 +1,154 @@
-Write-Output "PowerShell Timer trigger function executed at:$(get-date)";
- 
-$FunctionName = 'ExchangeTransportExtWarningDelegated'
-$ModuleName = 'MSOnline'
-$ModuleVersion = '1.1.166.0'
-$username = $Env:user
-$pw = $Env:password
-#import PS module
-$PSModulePath = "D:\home\site\wwwroot\$FunctionName\bin\$ModuleName\$ModuleVersion\$ModuleName.psd1"
-$res = "D:\home\site\wwwroot\$FunctionName\bin"
- 
-Import-module $PSModulePath
+# Description: Boxstarter Script
+# Author: Jess Frazelle <jess@linux.com>
+# Last Updated: 2017-09-11
+#
+# Install boxstarter:
+# 	. { iwr -useb http://boxstarter.org/bootstrapper.ps1 } | iex; get-boxstarter -Force
+#
+# You might need to set: Set-ExecutionPolicy RemoteSigned
+#
+# Run this boxstarter by calling the following from an **elevated** command-prompt:
+# 	start http://boxstarter.org/package/nr/url?<URL-TO-RAW-GIST>
+# OR
+# 	Install-BoxstarterPackage -PackageName https://raw.githubusercontent.com/lovellt/Boxstarter/master/boxstartconf.txt -DisableReboots
+#
+# Learn more: http://boxstarter.org/Learn/WebLauncher
+
+#---- TEMPORARY ---
+Disable-UAC
+
+#--- Fonts ---
+# choco install inconsolata -y
   
-# Build Credentials
-$keypath = "D:\home\site\wwwroot\$FunctionName\bin\keys\PassEncryptKey.key"
-$secpassword = $pw | ConvertTo-SecureString -Key (Get-Content $keypath)
-$credential = New-Object System.Management.Automation.PSCredential ($username, $secpassword)
-  
-# Connect to MSOnline
-Connect-MsolService -Credential $credential
-$customers = Get-MsolPartnerContract -All | Where-Object {$_.name -match "Customer1" -or $_.name -match "Customer2" -or $_.name -match "Customer3"}
- 
-Write-Output "Found $($customers.Count) customers for $((Get-MsolCompanyInformation).displayname)."
- 
-$ruleName = "Warn on external senders with matching display names"
-$ruleHtml = "<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 align=left width=`"100%`" style='width:100.0%;mso-cellspacing:0cm;mso-yfti-tbllook:1184; mso-table-lspace:2.25pt;mso-table-rspace:2.25pt;mso-table-anchor-vertical:paragraph;mso-table-anchor-horizontal:column;mso-table-left:left;mso-padding-alt:0cm 0cm 0cm 0cm'>  <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes'><td style='background:#910A19;padding:5.25pt 1.5pt 5.25pt 1.5pt'></td><td width=`"100%`" style='width:100.0%;background:#FDF2F4;padding:5.25pt 3.75pt 5.25pt 11.25pt; word-wrap:break-word' cellpadding=`"7px 5px 7px 15px`" color=`"#212121`"><div><p class=MsoNormal style='mso-element:frame;mso-element-frame-hspace:2.25pt; mso-element-wrap:around;mso-element-anchor-vertical:paragraph;mso-element-anchor-horizontal: column;mso-height-rule:exactly'><span style='font-size:9.0pt;font-family: `"Segoe UI`",sans-serif;mso-fareast-font-family:`"Times New Roman`";color:#212121'>This message was sent from outside the company by someone with a display name matching a user in your organisation. Please do not click links or open attachments unless you recognise the source of this email and know the content is safe. <o:p></o:p></span></p></div></td></tr></table>"
- 
- 
-foreach ($customer in $customers) {
-    $InitialDomain = Get-MsolDomain -TenantId $customer.TenantId | Where-Object {$_.IsInitial -eq $true}
-           
-    Write-Output "Checking transport rule for $($Customer.Name)"
-    $DelegatedOrgURL = "https://outlook.office365.com/powershell-liveid?DelegatedOrg=" + $InitialDomain.Name
-    $s = New-PSSession -ConnectionUri $DelegatedOrgURL -Credential $credential -Authentication Basic -ConfigurationName Microsoft.Exchange -AllowRedirection
-    Import-PSSession $s -CommandName Get-Mailbox, Get-TransportRule, New-TransportRule, Set-TransportRule -AllowClobber
-      
-    $rule = Get-TransportRule | Where-Object {$_.Identity -contains $ruleName}
-    $displayNames = (Get-Mailbox -ResultSize Unlimited).DisplayName
-     
-    if (!$rule) {
-        Write-Output "Rule not found, creating Rule"
-        New-TransportRule -Name $ruleName -Priority 0 -FromScope "NotInOrganization" -ApplyHtmlDisclaimerLocation "Prepend" `
-            -HeaderMatchesMessageHeader From -HeaderMatchesPatterns $displayNames -ApplyHtmlDisclaimerText $ruleHtml 
-    }
-    else {
-        Write-Output "Rule found, updating Rule"
-        Set-TransportRule -Identity $ruleName -Priority 0 -FromScope "NotInOrganization" -ApplyHtmlDisclaimerLocation "Prepend" `
-            -HeaderMatchesMessageHeader From -HeaderMatchesPatterns $displayNames -ApplyHtmlDisclaimerText $ruleHtml
-    }
-     
-    Remove-PSSession $s
+#--- Windows Settings ---
+Disable-BingSearch
+Disable-GameBarTips
+
+Set-WindowsExplorerOptions -EnableShowHiddenFilesFoldersDrives -EnableShowProtectedOSFiles -EnableShowFileExtensions
+Set-TaskbarOptions -Size Small -Dock Bottom -Combine Full -Lock
+Set-TaskbarOptions -Size Small -Dock Bottom -Combine Full -AlwaysShowIconsOn
+
+#--- Windows Subsystems/Features ---
+#choco install Microsoft-Hyper-V-All -source windowsFeatures
+#choco install Microsoft-Windows-Subsystem-Linux -source windowsfeatures
+
+#--- Uninstall unecessary applications that come with Windows out of the box ---
+
+Get-AppxPackage * | Remove-AppxPackage
+
+#--- Tools ---
+# choco install git -params '"/GitAndUnixToolsOnPath /WindowsTerminal"' -y
+# choco install poshgit
+# choco install sysinternals -y
+# choco install vim
+
+#--- Apps ---
+choco install googlechrome
+choco install firefox
+choco install Office365ProPlus
+choco install SkypeForBusiness
+choco install vlc
+choco install cmcollctr
+choco install javaruntime
+choco install flashplayerplugin
+choco install silverlight
+choco install citrix-receiver
+choco install spotify
+choco install k-litecodecpackfull
+choco install cyberduck
+choco install crashplan
+
+# choco install docker-for-windows
+# choco install sharex
+# choco install microsoft-teams
+# choco install vcxsrv
+
+#--- Windows Settings ---
+# Some from: @NickCraver's gist https://gist.github.com/NickCraver/7ebf9efbfd0c3eab72e9
+
+# Privacy: Let apps use my advertising ID: Disable
+If (-Not (Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo")) {
+    New-Item -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo | Out-Null
+}
+Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo -Name Enabled -Type DWord -Value 0
+
+# WiFi Sense: HotSpot Sharing: Disable
+If (-Not (Test-Path "HKLM:\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting")) {
+    New-Item -Path HKLM:\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting | Out-Null
+}
+Set-ItemProperty -Path HKLM:\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting -Name value -Type DWord -Value 0
+
+# WiFi Sense: Shared HotSpot Auto-Connect: Disable
+Set-ItemProperty -Path HKLM:\Software\Microsoft\PolicyManager\default\WiFi\AllowAutoConnectToWiFiSenseHotspots -Name value -Type DWord -Value 0
+
+# Start Menu: Disable Bing Search Results
+Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -Name BingSearchEnabled -Type DWord -Value 0
+# To Restore (Enabled):
+# Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -Name BingSearchEnabled -Type DWord -Value 1
+
+# Disable Telemetry (requires a reboot to take effect)
+# Note this may break Insider builds for your organization
+# Set-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection -Name AllowTelemetry -Type DWord -Value 0
+# Get-Service DiagTrack,Dmwappushservice | Stop-Service | Set-Service -StartupType Disabled
+
+# Change Explorer home screen back to "This PC"
+Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name LaunchTo -Type DWord -Value 1
+# Change it back to "Quick Access" (Windows 10 default)
+# Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name LaunchTo -Type DWord -Value 2
+
+# Better File Explorer
+Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneExpandToCurrentFolder -Value 1		
+Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneShowAllFolders -Value 1		
+Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name MMTaskbarMode -Value 2
+
+# These make "Quick Access" behave much closer to the old "Favorites"
+# Disable Quick Access: Recent Files
+Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowRecent -Type DWord -Value 0
+# Disable Quick Access: Frequent Folders
+Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowFrequent -Type DWord -Value 0
+# To Restore:
+# Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowRecent -Type DWord -Value 1
+# Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowFrequent -Type DWord -Value 1
+
+# Disable the Lock Screen (the one before password prompt - to prevent dropping the first character)
+#If (-Not (Test-Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization)) {
+#	New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows -Name Personalization | Out-Null
+#}
+Set-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization -Name NoLockScreen -Type DWord -Value 1
+# To Restore:
+# Set-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization -Name NoLockScreen -Type DWord -Value 1
+
+# Lock screen (not sleep) on lid close
+Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name AwayModeEnabled -Type DWord -Value 1
+# To Restore:
+# Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name AwayModeEnabled -Type DWord -Value 0
+
+# Use the Windows 7-8.1 Style Volume Mixer
+#If (-Not (Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC")) {
+#	New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name MTCUVC | Out-Null
+#}
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name EnableMtcUvc -Type DWord -Value 0
+# To Restore (Windows 10 Style Volume Control):
+# Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name EnableMtcUvc -Type DWord -Value 1
+
+# Disable Xbox Gamebar
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" -Name AppCaptureEnabled -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name GameDVR_Enabled -Type DWord -Value 0
+
+# Turn off People in Taskbar
+If (-Not (Test-Path "HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People")) {
+    New-Item -Path HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People | Out-Null
+}
+Set-ItemProperty -Path "HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" -Name PeopleBand -Type DWord -Value 0
+
+#--- Restore Temporary Settings ---
+Enable-UAC
+Enable-MicrosoftUpdate
+Install-WindowsUpdate -acceptEula
+
+#--- Rename the Computer ---
+# Requires restart, or add the -Restart flag
+$computername = "GoldDev"
+if ($env:computername -ne $computername) {
+	Rename-Computer -NewName $computername
+}
