@@ -34,7 +34,7 @@ Set-TaskbarOptions -Size Small -Dock Bottom -Combine Full -AlwaysShowIconsOn
 
 #--- Uninstall unecessary applications that come with Windows out of the box ---
 
-Get-AppxPackage * | Remove-AppxPackage
+Get-AppxPackage * | Remove-AppxPackage -ea 0
 
 #--- Tools ---
 # choco install git -params '"/GitAndUnixToolsOnPath /WindowsTerminal"' -y
@@ -46,7 +46,6 @@ Get-AppxPackage * | Remove-AppxPackage
 choco install googlechrome
 choco install firefox
 choco install Office365ProPlus
-choco install SkypeForBusiness
 choco install vlc
 choco install cmcollctr
 choco install javaruntime
