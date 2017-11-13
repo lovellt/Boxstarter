@@ -188,11 +188,12 @@ choco install vlc
 choco install javaruntime
 choco install flashplayerplugin
 choco install silverlight
-choco install citrix-receiver
+#choco install citrix-receiver
 choco install spotify
 choco install k-litecodecpackfull
-choco install cyberduck
-choco install crashplan
+#choco install cyberduck
+#choco install crashplan
+choco install itunes
 
 # choco install docker-for-windows
 # choco install sharex
@@ -285,11 +286,11 @@ Set-ItemProperty -Path "HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\
 #--- Restore Temporary Settings ---
 Enable-UAC
 Enable-MicrosoftUpdate
-# Install-WindowsUpdate -acceptEula
+Install-WindowsUpdate -acceptEula
 
 #--- Rename the Computer ---
-Requires restart, or add the -Restart flag
-$computername = "GoldDev2"
-if ($env:computername -ne $computername) {
-	Rename-Computer -NewName $computername
-}
+#Requires restart, or add the -Restart flag
+#$computername = "GoldDev2"
+#if ($env:computername -ne $computername) {
+#	Rename-Computer -NewName $computername
+#}
