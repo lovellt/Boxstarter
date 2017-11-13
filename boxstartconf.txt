@@ -159,7 +159,6 @@ Get-AppxPackage Microsoft.Office.Sway | Remove-AppxPackage
 Get-AppxPackage *Twitter* | Remove-AppxPackage
 
 # Wallet
-Microsoft.Wallet
 Get-AppxPackage Microsoft.Wallet | Remove-AppxPackage
 
 # Xbox
