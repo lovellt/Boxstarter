@@ -14,13 +14,13 @@
 #
 # Learn more: http://boxstarter.org/Learn/WebLauncher
 
-#---- TEMPORARY ---
+# ---- TEMPORARY ---
 Disable-UAC
 
-#--- Fonts ---
+# --- Fonts ---
 # choco install inconsolata -y
   
-#--- Windows Settings ---
+# --- Windows Settings ---
 Disable-BingSearch
 Disable-GameBarTips
 
@@ -29,8 +29,8 @@ Set-TaskbarOptions -Size Small -Dock Bottom -Combine Full -Lock
 Set-TaskbarOptions -Size Small -Dock Bottom -Combine Full -AlwaysShowIconsOn
 
 #--- Windows Subsystems/Features ---
-#choco install Microsoft-Hyper-V-All -source windowsFeatures
-#choco install Microsoft-Windows-Subsystem-Linux -source windowsfeatures
+# choco install Microsoft-Hyper-V-All -source windowsFeatures
+# choco install Microsoft-Windows-Subsystem-Linux -source windowsfeatures
 
 #--- Uninstall unecessary applications that come with Windows out of the box ---
 
@@ -111,8 +111,9 @@ Get-AppxPackage Microsoft.Messaging | Remove-AppxPackage
 # Minecraft
 Get-AppxPackage *Minecraft* | Remove-AppxPackage
 
-#Pandora
+# Pandora
 Get-AppxPackage PandoraMediaInc.* | Remove-AppxPackage
+
 # Netflix
 Get-AppxPackage *Netflix* | Remove-AppxPackage
 
