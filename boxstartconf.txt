@@ -29,8 +29,8 @@ Set-TaskbarOptions -Size Small -Dock Bottom -Combine Full -Lock
 Set-TaskbarOptions -Size Small -Dock Bottom -Combine Full -AlwaysShowIconsOn
 
 #--- Windows Subsystems/Features ---
-# choco install Microsoft-Hyper-V-All -source windowsFeatures
-# choco install Microsoft-Windows-Subsystem-Linux -source windowsfeatures
+choco install Microsoft-Hyper-V-All -source windowsFeatures
+choco install Microsoft-Windows-Subsystem-Linux -source windowsfeatures
 
 #--- Uninstall unecessary applications that come with Windows out of the box ---
 
@@ -163,8 +163,8 @@ Get-AppxPackage *Twitter* | Remove-AppxPackage
 Get-AppxPackage Microsoft.Wallet | Remove-AppxPackage
 
 # Xbox
-Get-AppxPackage Microsoft.XboxApp | Remove-AppxPackage
-Get-AppxPackage Microsoft.XboxIdentityProvider | Remove-AppxPackage
+#Get-AppxPackage Microsoft.XboxApp | Remove-AppxPackage
+#Get-AppxPackage Microsoft.XboxIdentityProvider | Remove-AppxPackage
 
 # Zune Music, Movies & TV
 Get-AppxPackage Microsoft.ZuneMusic | Remove-AppxPackage
@@ -177,7 +177,7 @@ C:\windows\SysWOW64\OneDriveSetup.exe /uninstall
 #--- Tools ---
 # choco install git -params '"/GitAndUnixToolsOnPath /WindowsTerminal"' -y
 # choco install poshgit
-# choco install sysinternals -y
+choco install sysinternals -y
 # choco install vim
 
 #--- Apps ---
@@ -188,14 +188,15 @@ choco install vlc
 choco install javaruntime
 choco install flashplayerplugin
 choco install silverlight
-#choco install citrix-receiver
+choco install citrix-receiver
 choco install spotify
 choco install k-litecodecpackfull
-#choco install cyberduck
+choco install cyberduck
 #choco install crashplan
 #choco install itunes
+choco install google-drive-file-stream
 
-# choco install docker-for-windows
+choco install docker-for-windows
 # choco install sharex
 # choco install microsoft-teams
 # choco install vcxsrv
@@ -282,6 +283,7 @@ Set-ItemProperty -Path "HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\
 
 # cscript "C:\Program Files (x86)\Microsoft Office\Office16\ospp.vbs" /inpkey:JNRGM-WHDWX-FJJG3-K47QV-DRTFM
 # cscript "C:\Program Files (x86)\Microsoft Office\Office16\ospp.vbs" /act
+
 
 #--- Restore Temporary Settings ---
 Enable-UAC
