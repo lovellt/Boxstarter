@@ -10,29 +10,16 @@
 # Run this boxstarter by calling the following from an **elevated** command-prompt:
 # 	start http://boxstarter.org/package/nr/url?<URL-TO-RAW-GIST>
 # OR
-# 	Install-BoxstarterPackage -PackageName https://raw.githubusercontent.com/lovellt/Boxstarter/master/boxstartconf.txt -DisableReboots
+# 	Install-BoxstarterPackage -PackageName https://raw.githubusercontent.com/lovellt/Boxstarter/user/boxstartconf.txt -DisableReboots
 #
 # Learn more: http://boxstarter.org/Learn/WebLauncher
 
 # ---- TEMPORARY ---
 Disable-UAC
 
-# --- Fonts ---
-# choco install inconsolata -y
-  
 # --- Windows Settings ---
 Disable-BingSearch
 Disable-GameBarTips
-
-Set-WindowsExplorerOptions -EnableShowHiddenFilesFoldersDrives -EnableShowProtectedOSFiles -EnableShowFileExtensions
-Set-TaskbarOptions -Size Small -Dock Bottom -Combine Full -Lock
-Set-TaskbarOptions -Size Small -Dock Bottom -Combine Full -AlwaysShowIconsOn
-
-#--- Windows Subsystems/Features ---
-choco install Microsoft-Hyper-V-All -source windowsFeatures
-choco install Microsoft-Windows-Subsystem-Linux -source windowsfeatures
-
-#--- Uninstall unecessary applications that come with Windows out of the box ---
 
 # 3D Builder
 Get-AppxPackage Microsoft.3DBuilder | Remove-AppxPackage
@@ -163,8 +150,8 @@ Get-AppxPackage *Twitter* | Remove-AppxPackage
 Get-AppxPackage Microsoft.Wallet | Remove-AppxPackage
 
 # Xbox
-#Get-AppxPackage Microsoft.XboxApp | Remove-AppxPackage
-#Get-AppxPackage Microsoft.XboxIdentityProvider | Remove-AppxPackage
+Get-AppxPackage Microsoft.XboxApp | Remove-AppxPackage
+Get-AppxPackage Microsoft.XboxIdentityProvider | Remove-AppxPackage
 
 # Zune Music, Movies & TV
 Get-AppxPackage Microsoft.ZuneMusic | Remove-AppxPackage
@@ -174,32 +161,20 @@ Get-AppxPackage Microsoft.ZuneVideo | Remove-AppxPackage
 C:\windows\SysWOW64\OneDriveSetup.exe /uninstall
 
 
-#--- Tools ---
-# choco install git -params '"/GitAndUnixToolsOnPath /WindowsTerminal"' -y
-# choco install poshgit
-choco install sysinternals -y
-# choco install vim
-
 #--- Apps ---
 choco install googlechrome
 choco install firefox
 #choco install Office365ProPlus
-choco install vlc
 choco install javaruntime
 choco install flashplayerplugin
+choco install quicktime
 choco install silverlight
 choco install citrix-receiver
 choco install spotify
-choco install k-litecodecpackfull
 choco install cyberduck
-#choco install crashplan
-#choco install itunes
-choco install google-drive-file-stream
-
-choco install docker-for-windows
-# choco install sharex
-# choco install microsoft-teams
-# choco install vcxsrv
+choco install crashplan
+choco install itunes
+choco install 7zip
 
 Remove-Item C:\Users\*\Desktop\*lnk –Force
 
@@ -232,54 +207,9 @@ Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search -N
 # Get-Service DiagTrack,Dmwappushservice | Stop-Service | Set-Service -StartupType Disabled
 
 # Change Explorer home screen back to "This PC"
-Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name LaunchTo -Type DWord -Value 1
-# Change it back to "Quick Access" (Windows 10 default)
-# Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name LaunchTo -Type DWord -Value 2
-
-# Better File Explorer
-# Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneExpandToCurrentFolder -Value 1		
-# Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneShowAllFolders -Value 1		
-# Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name MMTaskbarMode -Value 2
-
-# These make "Quick Access" behave much closer to the old "Favorites"
-# Disable Quick Access: Recent Files
-Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowRecent -Type DWord -Value 0
-# Disable Quick Access: Frequent Folders
-Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowFrequent -Type DWord -Value 0
-# To Restore:
-# Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowRecent -Type DWord -Value 1
-# Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowFrequent -Type DWord -Value 1
-
-# Disable the Lock Screen (the one before password prompt - to prevent dropping the first character)
-# If (-Not (Test-Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization)) {
-#	New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows -Name Personalization | Out-Null
-# }
-# Set-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization -Name NoLockScreen -Type DWord -Value 1
-# To Restore:
-# Set-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization -Name NoLockScreen -Type DWord -Value 1
-
-# Lock screen (not sleep) on lid close
-Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name AwayModeEnabled -Type DWord -Value 1
-# To Restore:
-# Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name AwayModeEnabled -Type DWord -Value 0
-
-# Use the Windows 7-8.1 Style Volume Mixer
-# If (-Not (Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC")) {
-#	New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name MTCUVC | Out-Null
-# }
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name EnableMtcUvc -Type DWord -Value 0
-# To Restore (Windows 10 Style Volume Control):
-# Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name EnableMtcUvc -Type DWord -Value 1
-
 # Disable Xbox Gamebar
-# Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" -Name AppCaptureEnabled -Type DWord -Value 0
-# Set-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name GameDVR_Enabled -Type DWord -Value 0
-
-# Turn off People in Taskbar
-# If (-Not (Test-Path "HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People")) {
-#    New-Item -Path HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People | Out-Null
-# }
-# Set-ItemProperty -Path "HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" -Name PeopleBand -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" -Name AppCaptureEnabled -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name GameDVR_Enabled -Type DWord -Value 0
 
 # --- Restore Temporary Settings ---
 Enable-UAC
